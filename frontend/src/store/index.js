@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import fruitReducer from './fruitReducer';
 import articleReducer from './articleReducer';
+import thunk from 'redux-thunk'
 
 // `combineReducers` combines all the reducer functions into one big reducer
 // function, which is typically called `rootReducer`. This is the most important
@@ -14,6 +15,8 @@ const rootReducer = combineReducers({
 // `enhancer` allows you to alter the store and add functionality such as the
 // Redux DevTools and logger (similar to morgan) middleware
 let enhancer;
+
+
 
 // `compose` gives you the ability to add more than one enhancer to the store.
 // `env` is set up automatically by `create-react-app`. `process.env.NODE_ENV`
@@ -32,7 +35,9 @@ if (process.env.NODE_ENV !== 'production') {
   const composeEnhancers =
     typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ trace: true }) : compose;
-  enhancer = composeEnhancers(applyMiddleware(logger));
+  enhancer = composeEnhancers(applyMiddleware(thunk, logger));
+} else {
+  enhancer = applyMiddleware(thunk)
 }
 
 // `createStore` creates a store object literal {} 
